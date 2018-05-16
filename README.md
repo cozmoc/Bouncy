@@ -1,5 +1,9 @@
 # Bouncy
 
+Physics simulation without physics engine!
+
+![bouncy](https://i.imgur.com/zWgexnyr.jpg)
+
 ## CLI Commands
 
 ``` bash
