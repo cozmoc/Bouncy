@@ -1,21 +1,11 @@
 import Ball from '../components/Ball';
+import canvasMock from './__mocks__/canvasMock';
 
 describe('Balls Component', () => {
   let context, canvas, balls;
   beforeEach(() => {
-    context = {
-      beginPath: jest.fn(),
-      moveTo: jest.fn(),
-      lineTo: jest.fn(),
-      stroke: jest.fn(),
-      beginPath: jest.fn(),
-      arc: jest.fn(),
-      fill: jest.fn(),
-    };
-    canvas = {
-      width: 100,
-      height: 100,      
-    }
+    canvas = canvasMock;
+    context = canvas.getContext();
     balls = [
       new Ball({context, canvas, x:100, y:100, ballSize:10, bouncing:0.5, friction: 1.01, color: 'rgba(255,255,255,1)', gravity: 0.05}),
       new Ball({context, canvas, x:100, y:100, ballSize:20, bouncing:0.9, friction: 1.1, color: 'rgba(127,127,127,1)', gravity: 0.1}),
