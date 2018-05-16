@@ -19,11 +19,11 @@ export default class Game extends Component {
     this.cursor({x: window.innerWidth/2, y: window.innerHeight/2});
   }
 
-  componentDidUnmount() {
+  componentDidUnmount() { // free up memory after unmount
     clearInterval(this.interval);
   }
 
-  randomColor() {
+  randomColor() { // 16 million color combination
     return `rgba(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)},1)`;
   }
 
@@ -36,12 +36,13 @@ export default class Game extends Component {
     this.updateGameArea();
   }
 
-  clear() {
+  clear() { // cleaning the screen function called every frame
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.drawImage(this.backGround, 0, 0, this.canvas.width, this.canvas.height);
   }
 
   cursor(evt) {
+    // detects changes in mouse position and fires start function on first frame
     this.mousePosition = evt;
     if (!this.state.frameNo) {
       this.start();
@@ -49,7 +50,7 @@ export default class Game extends Component {
     }
   }
 
-  getMousePos(evt) {
+  getMousePos(evt) { // get real click position on canvas
     const rect = this.canvas.getBoundingClientRect();
     return {
       x: evt.clientX - rect.left,
@@ -60,6 +61,7 @@ export default class Game extends Component {
   addBall(evt) {
     const {x, y} = this.getMousePos(evt);
     const {bouncing, gravity, ballSize, ballsLimit, friction} = this.state;
+    // adding ball
     this.balls = [].concat(this.balls,
       new Ball({
         bouncing, gravity, ballSize, ballsLimit, friction,
@@ -72,11 +74,15 @@ export default class Game extends Component {
   }
 
   updateGameArea() {
+    // clearing screen
     this.clear();
     this.frameNo++;
+    // setting balls limit
     this.balls = this.balls.slice(-this.state.ballsLimit);
+    // updating positions then drawing each ball
     this.balls.forEach((ball) => { ball.newPos() });
     this.balls.forEach((ball) => { ball.update() });
+    // drawing cursor image in mouse position
     this.context.drawImage(
       this.cursorImage,
       this.mousePosition.x - this.state.ballSize*2,
@@ -90,15 +96,16 @@ export default class Game extends Component {
     clearInterval(this.interval);
     this.frameNo = 0;
   }
-
+  // change in sliders
   handleChange(evt, target) {
     this.setState({[target]: Number(evt.target.value)});
     if (target == 'fps') {
+      // restarting interval
       this.restartFps();
       this.cursor(this.mousePosition);
     }
   }
-
+  // default slider values
   defaults() {
     this.setState({
       bouncing: 0.5,
@@ -110,7 +117,7 @@ export default class Game extends Component {
     });
     this.restartFps();
   }
-
+  // loading next backgrounds from assets
   nextBackground() {
     const oldSrc = this.backGround.src.replace(window.location.href, '');
     const next = backGrounds[backGrounds.indexOf(oldSrc) + 1] || backGrounds[0];
